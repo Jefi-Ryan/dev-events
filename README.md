@@ -1,1 +1,1 @@
-Currently deployed in [here](dev-events-jefi-ryan.vercel.app)
+Currently deployed in [here](https://dev-events-jefi-ryan.vercel.app)
