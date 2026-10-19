@@ -14,7 +14,6 @@ const HomePage = () => {
 }
 
 const Home = async () => {
-    
     "use cache";
     cacheLife("hours");
 
