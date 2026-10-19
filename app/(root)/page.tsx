@@ -1,6 +1,6 @@
 import EventCard from "@/components/EventCard";
 import type { EventDetails } from "@/lib/data";
-import { cacheLife } from "next/cache";
+import { cacheLife, io } from "next/cache";
 import { Suspense } from "react";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -14,30 +14,37 @@ const HomePage = () => {
 }
 
 const Home = async () => {
-    "use cache";
-    cacheLife("hours");
-
-    if (!BASE_URL) {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!baseUrl) {
         throw new Error("NEXT_PUBLIC_BASE_URL is not configured");
     }
 
-    const response = await fetch(`${BASE_URL}/api/events`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
-    }
-
-    const { events }: { events: EventDetails[] } = await response.json();
+    await io();
+    const events = await getEvents(baseUrl);
 
     return (
         <div>
             <h1>Explore events</h1>
             <div className="events">
-                {events.map((event: EventDetails) => (
+                {events.map((event) => (
                     <EventCard key={event.title} details={event} />
                 ))}
             </div>
         </div>
     )
+}
+
+const getEvents = async (baseUrl: string): Promise<EventDetails[]> => {
+    "use cache";
+    cacheLife("hours");
+
+    const response = await fetch(`${baseUrl}/api/events`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+    }
+
+    const { events }: { events: EventDetails[] } = await response.json();
+    return events;
 }
 
 export default HomePage;
