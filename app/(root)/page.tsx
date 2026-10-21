@@ -24,8 +24,8 @@ const Home = async () => {
 
     return (
         <div>
-            <h1>Explore events</h1>
-            <div className="events">
+            <h1 className="text-[clamp(25px,3vw,36px)] mb-5 text-center font-extrabold">Explore events</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-4">
                 {events.map((event) => (
                     <EventCard key={event.title} details={event} />
                 ))}
